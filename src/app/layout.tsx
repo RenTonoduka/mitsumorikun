@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { SessionProvider } from "@/components/providers/SessionProvider"
 import { OnboardingProvider } from "@/contexts/OnboardingContext"
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal"
 
@@ -21,10 +22,12 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <OnboardingProvider>
-          {children}
-          <OnboardingModal />
-        </OnboardingProvider>
+        <SessionProvider>
+          <OnboardingProvider>
+            {children}
+            <OnboardingModal />
+          </OnboardingProvider>
+        </SessionProvider>
       </body>
     </html>
   )
