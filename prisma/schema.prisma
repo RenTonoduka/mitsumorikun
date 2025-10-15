@@ -1,0 +1,341 @@
+// Prisma Schema for Mitsumorikun (AI/System Development Quote Comparison Platform)
+// Database: PostgreSQL (Neon)
+// Generated: 2025-10-15
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// Authentication & User Management
+// ============================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  role          UserRole  @default(USER)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  companyUsers  CompanyUser[]
+  requests      Request[]
+  reviews       Review[]
+  favorites     Favorite[]
+
+  @@index([email])
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  COMPANY_ADMIN
+  SYSTEM_ADMIN
+}
+
+model Company {
+  id                String   @id @default(cuid())
+  name              String
+  nameKana          String?
+  slug              String   @unique
+  logo              String?
+  coverImage        String?
+  description       String?
+  foundedYear       Int?
+  employeeCount     String?
+  capital           String?
+  address           String?
+  phone             String?
+  email             String?
+  website           String?
+  
+  // Business info
+  isVerified        Boolean  @default(false)
+  verifiedAt        DateTime?
+  averageRating     Float    @default(0.0)
+  reviewCount       Int      @default(0)
+  projectCount      Int      @default(0)
+  
+  // Settings
+  autoReply         Boolean  @default(false)
+  acceptsNewProjects Boolean @default(true)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  companyUsers      CompanyUser[]
+  requestCompanies  RequestCompany[]
+  reviews           Review[]
+  favorites         Favorite[]
+  techStacks        CompanyTechStack[]
+  specialties       CompanySpecialty[]
+
+  @@index([slug])
+  @@index([isVerified])
+  @@map("companies")
+}
+
+model CompanyUser {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  role      CompanyUserRole @default(MEMBER)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId])
+  @@index([userId])
+  @@index([companyId])
+  @@map("company_users")
+}
+
+enum CompanyUserRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+// ============================================================================
+// Quote Request Management
+// ============================================================================
+
+model Request {
+  id              String         @id @default(cuid())
+  userId          String
+  title           String
+  description     String
+  projectType     ProjectType
+  budget          String?
+  budgetMin       Int?
+  budgetMax       Int?
+  deadline        DateTime?
+  preferredStart  DateTime?
+  
+  // Requirements
+  requirements    Json?
+  attachments     String[]       @default([])
+  
+  // Status
+  status          RequestStatus  @default(DRAFT)
+  publishedAt     DateTime?
+  closedAt        DateTime?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relations
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requestCompanies RequestCompany[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([projectType])
+  @@index([publishedAt])
+  @@map("requests")
+}
+
+enum ProjectType {
+  WEB_DEVELOPMENT
+  MOBILE_APP
+  AI_ML
+  SYSTEM_INTEGRATION
+  CONSULTING
+  MAINTENANCE
+  OTHER
+}
+
+enum RequestStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+  CANCELLED
+}
+
+model RequestCompany {
+  id              String                @id @default(cuid())
+  requestId       String
+  companyId       String
+  
+  // Quote details
+  estimatedCost   Int?
+  estimatedDuration String?
+  proposal        String?
+  attachments     String[]              @default([])
+  
+  // Status
+  status          RequestCompanyStatus  @default(PENDING)
+  respondedAt     DateTime?
+  selectedAt      DateTime?
+  
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  // Relations
+  request         Request               @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  company         Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([requestId, companyId])
+  @@index([requestId])
+  @@index([companyId])
+  @@index([status])
+  @@map("request_companies")
+}
+
+enum RequestCompanyStatus {
+  PENDING
+  RESPONDED
+  SELECTED
+  REJECTED
+}
+
+// ============================================================================
+// Reviews & Ratings
+// ============================================================================
+
+model Review {
+  id              String   @id @default(cuid())
+  userId          String
+  companyId       String
+  
+  // Rating (1-5)
+  rating          Int
+  
+  // Review content
+  title           String?
+  content         String
+  projectType     ProjectType?
+  projectDuration String?
+  projectCost     String?
+  
+  // Moderation
+  isPublished     Boolean  @default(true)
+  isVerified      Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([rating])
+  @@index([isPublished])
+  @@map("reviews")
+}
+
+// ============================================================================
+// Favorites & Bookmarks
+// ============================================================================
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId])
+  @@index([userId])
+  @@index([companyId])
+  @@map("favorites")
+}
+
+// ============================================================================
+// Tech Stack & Specialties (Taxonomy)
+// ============================================================================
+
+model TechStack {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  slug        String             @unique
+  category    TechStackCategory
+  icon        String?
+  
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  // Relations
+  companies   CompanyTechStack[]
+
+  @@index([category])
+  @@map("tech_stacks")
+}
+
+enum TechStackCategory {
+  LANGUAGE
+  FRAMEWORK
+  DATABASE
+  CLOUD
+  TOOL
+  OTHER
+}
+
+model CompanyTechStack {
+  id          String    @id @default(cuid())
+  companyId   String
+  techStackId String
+  
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  techStack   TechStack @relation(fields: [techStackId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, techStackId])
+  @@index([companyId])
+  @@index([techStackId])
+  @@map("company_tech_stacks")
+}
+
+model Specialty {
+  id          String            @id @default(cuid())
+  name        String            @unique
+  slug        String            @unique
+  description String?
+  
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  companies   CompanySpecialty[]
+
+  @@map("specialties")
+}
+
+model CompanySpecialty {
+  id          String    @id @default(cuid())
+  companyId   String
+  specialtyId String
+  
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  specialty   Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, specialtyId])
+  @@index([companyId])
+  @@index([specialtyId])
+  @@map("company_specialties")
+}
