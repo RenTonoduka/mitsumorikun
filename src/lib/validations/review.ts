@@ -12,16 +12,16 @@ import { ProjectType } from "@prisma/client";
 export const reviewRatingSchema = z
   .number()
   .int()
-  .min(1, "Rating must be at least 1")
-  .max(5, "Rating must be at most 5");
+  .min(1, "1以上で入力してください")
+  .max(5, "5以下で入力してください");
 
 /**
  * Review title validation (optional, 5-100 chars)
  */
 export const reviewTitleSchema = z
   .string()
-  .min(5, "Title must be at least 5 characters")
-  .max(100, "Title must be at most 100 characters")
+  .min(5, "5文字以上で入力してください")
+  .max(100, "100文字以内で入力してください")
   .optional();
 
 /**
@@ -29,8 +29,8 @@ export const reviewTitleSchema = z
  */
 export const reviewContentSchema = z
   .string()
-  .min(20, "Review must be at least 20 characters")
-  .max(500, "Review must be at most 500 characters");
+  .min(20, "20文字以上で入力してください")
+  .max(500, "500文字以内で入力してください");
 
 /**
  * Project type validation
@@ -42,7 +42,7 @@ export const reviewProjectTypeSchema = z.nativeEnum(ProjectType).optional();
  */
 export const reviewProjectDurationSchema = z
   .string()
-  .max(50, "Project duration must be at most 50 characters")
+  .max(50, "50文字以内で入力してください")
   .optional();
 
 /**
@@ -50,14 +50,14 @@ export const reviewProjectDurationSchema = z
  */
 export const reviewProjectCostSchema = z
   .string()
-  .max(50, "Project cost must be at most 50 characters")
+  .max(50, "50文字以内で入力してください")
   .optional();
 
 /**
  * Review creation schema
  */
 export const createReviewSchema = z.object({
-  companyId: z.string().cuid("Invalid company ID"),
+  companyId: z.string().cuid("無効な会社IDです"),
   rating: reviewRatingSchema,
   title: reviewTitleSchema,
   content: reviewContentSchema,

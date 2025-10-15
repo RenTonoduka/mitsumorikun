@@ -22,7 +22,7 @@ export const requestStatusSchema = z.nativeEnum(RequestStatus);
 export const fileAttachmentSchema = z.object({
   name: z.string(),
   url: z.string().url(),
-  size: z.number().max(10 * 1024 * 1024, 'File size must be less than 10MB'),
+  size: z.number().max(10 * 1024 * 1024, '10MB未満にしてください'),
   type: z.string(),
 });
 
@@ -45,23 +45,23 @@ export const requirementsSchema = z.object({
 export const requestBaseSchema = z.object({
   title: z
     .string()
-    .min(5, 'Title must be at least 5 characters')
-    .max(100, 'Title must be less than 100 characters'),
+    .min(5, '5文字以上で入力してください')
+    .max(100, '100文字以内で入力してください'),
   description: z
     .string()
-    .min(20, 'Description must be at least 20 characters')
-    .max(2000, 'Description must be less than 2000 characters'),
+    .min(20, '20文字以上で入力してください')
+    .max(2000, '2000文字以内で入力してください'),
   projectType: projectTypeSchema,
   budgetMin: z
     .number()
     .int()
-    .positive('Budget must be positive')
+    .positive('正の値を入力してください')
     .optional()
     .nullable(),
   budgetMax: z
     .number()
     .int()
-    .positive('Budget must be positive')
+    .positive('正の値を入力してください')
     .optional()
     .nullable(),
   deadline: z
@@ -92,7 +92,7 @@ export const requestCreateSchema = requestBaseSchema
       return true;
     },
     {
-      message: 'Minimum budget must be less than maximum budget',
+      message: '最小予算は最大予算より小さい値を入力してください',
       path: ['budgetMax'],
     }
   )
@@ -106,7 +106,7 @@ export const requestCreateSchema = requestBaseSchema
       return true;
     },
     {
-      message: 'Preferred start date must be before deadline',
+      message: '希望開始日は納期より前にしてください',
       path: ['deadline'],
     }
   );

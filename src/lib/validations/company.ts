@@ -9,34 +9,34 @@ import { z } from "zod"
 export const companyBasicInfoSchema = z.object({
   name: z
     .string()
-    .min(2, "Company name must be at least 2 characters")
-    .max(100, "Company name must not exceed 100 characters"),
+    .min(2, "2文字以上で入力してください")
+    .max(100, "100文字以内で入力してください"),
   nameKana: z
     .string()
-    .max(100, "Company name (Kana) must not exceed 100 characters")
+    .max(100, "100文字以内で入力してください")
     .optional()
     .nullable(),
   description: z
     .string()
-    .min(10, "Description must be at least 10 characters")
-    .max(2000, "Description must not exceed 2000 characters")
+    .min(10, "10文字以上で入力してください")
+    .max(2000, "2000文字以内で入力してください")
     .optional()
     .nullable(),
   foundedYear: z
     .number()
     .int()
-    .min(1900, "Founded year must be after 1900")
-    .max(new Date().getFullYear(), "Founded year cannot be in the future")
+    .min(1900, "1900年以降を指定してください")
+    .max(new Date().getFullYear(), "未来の年は指定できません")
     .optional()
     .nullable(),
   employeeCount: z
     .string()
-    .max(50, "Employee count must not exceed 50 characters")
+    .max(50, "50文字以内で入力してください")
     .optional()
     .nullable(),
   capital: z
     .string()
-    .max(50, "Capital must not exceed 50 characters")
+    .max(50, "50文字以内で入力してください")
     .optional()
     .nullable(),
 })
@@ -45,25 +45,25 @@ export const companyBasicInfoSchema = z.object({
 export const companyContactInfoSchema = z.object({
   address: z
     .string()
-    .max(200, "Address must not exceed 200 characters")
+    .max(200, "200文字以内で入力してください")
     .optional()
     .nullable(),
   phone: z
     .string()
-    .regex(/^[0-9\-+() ]*$/, "Phone number contains invalid characters")
-    .max(20, "Phone number must not exceed 20 characters")
+    .regex(/^[0-9\-+() ]*$/, "無効な文字が含まれています")
+    .max(20, "20文字以内で入力してください")
     .optional()
     .nullable(),
   email: z
     .string()
-    .email("Invalid email address")
-    .max(100, "Email must not exceed 100 characters")
+    .email("メールアドレスの形式が正しくありません")
+    .max(100, "100文字以内で入力してください")
     .optional()
     .nullable(),
   website: z
     .string()
-    .url("Invalid website URL")
-    .max(200, "Website URL must not exceed 200 characters")
+    .url("URLの形式が正しくありません")
+    .max(200, "200文字以内で入力してください")
     .optional()
     .nullable(),
 })
@@ -72,14 +72,14 @@ export const companyContactInfoSchema = z.object({
 export const companyImagesSchema = z.object({
   logo: z
     .string()
-    .url("Invalid logo URL")
-    .max(500, "Logo URL must not exceed 500 characters")
+    .url("URLの形式が正しくありません")
+    .max(500, "500文字以内で入力してください")
     .optional()
     .nullable(),
   coverImage: z
     .string()
-    .url("Invalid cover image URL")
-    .max(500, "Cover image URL must not exceed 500 characters")
+    .url("URLの形式が正しくありません")
+    .max(500, "500文字以内で入力してください")
     .optional()
     .nullable(),
 })
@@ -87,13 +87,13 @@ export const companyImagesSchema = z.object({
 // Step 4: Tech Stacks & Specialties
 export const companyTechSpecSchema = z.object({
   techStackIds: z
-    .array(z.string().cuid("Invalid tech stack ID"))
-    .min(1, "At least one tech stack is required")
-    .max(20, "Maximum 20 tech stacks allowed"),
+    .array(z.string().cuid("無効な技術スタックIDです"))
+    .min(1, "少なくとも1つの技術スタックを選択してください")
+    .max(20, "最大20まで選択できます"),
   specialtyIds: z
-    .array(z.string().cuid("Invalid specialty ID"))
-    .min(1, "At least one specialty is required")
-    .max(10, "Maximum 10 specialties allowed"),
+    .array(z.string().cuid("無効な専門分野IDです"))
+    .min(1, "少なくとも1つの専門分野を選択してください")
+    .max(10, "最大10まで選択できます"),
 })
 
 // Complete company registration schema (all steps combined)
@@ -113,10 +113,10 @@ export const companyUpdateSchema = companyBasicInfoSchema
 export const imageUploadSchema = z.object({
   file: z
     .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, "Image size must be less than 5MB")
+    .refine((file) => file.size <= 5 * 1024 * 1024, "5MB未満にしてください")
     .refine(
       (file) => ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type),
-      "Only JPEG, PNG, WebP, and GIF images are allowed"
+      "JPEG、PNG、WebP、GIF形式のみ使用できます"
     ),
 })
 
