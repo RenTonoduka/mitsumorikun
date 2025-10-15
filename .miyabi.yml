@@ -1,0 +1,209 @@
+# Miyabi Configuration
+# 🌸 Beauty in Autonomous Development
+
+project:
+  name: "mitsumorikun"
+  description: "Autonomous development powered by Agentic OS"
+  version: "0.1.0"
+  repository: "https://github.com/RenTonoduka/mitsumorikun"
+
+# 識学理論 (Shikigaku Theory) - 組織設計原則
+shikigaku:
+  enabled: true
+  principles:
+    - responsibility_clarity    # 責任の明確化
+    - authority_delegation     # 権限の委譲
+    - hierarchy_design         # 階層の設計
+    - result_evaluation        # 結果の評価
+    - ambiguity_elimination    # 曖昧性の排除
+
+# Agent Configuration
+agents:
+  coordinator:
+    enabled: true
+    strategy: "dag"           # DAG-based task decomposition
+    parallel_execution: true
+    critical_path_optimization: true
+
+  issue:
+    enabled: true
+    auto_label: true
+    complexity_estimation: true
+    label_system: "shikigaku-65"
+
+  codegen:
+    enabled: true
+    model: "claude-sonnet-4"
+    strict_mode: true
+    language: "typescript"
+
+  review:
+    enabled: true
+    quality_threshold: 80     # Minimum score to pass
+    static_analysis: true
+    security_scan: true
+
+  pr:
+    enabled: true
+    auto_create: true
+    convention: "conventional-commits"
+    draft_mode: true
+
+  deployment:
+    enabled: true
+    auto_deploy: true
+    health_check: true
+    auto_rollback: true
+
+  test:
+    enabled: true
+    coverage_target: 80
+    auto_run: true
+
+# Label System - 識学理論65ラベル体系
+labels:
+  categories:
+    type:
+      - bug
+      - feature
+      - refactor
+      - docs
+      - test
+      - chore
+      - security
+
+    priority:
+      - P0-Critical
+      - P1-High
+      - P2-Medium
+      - P3-Low
+
+    state:
+      - pending
+      - analyzing
+      - implementing
+      - reviewing
+      - testing
+      - deploying
+      - done
+
+    agent:
+      - codegen
+      - review
+      - deployment
+      - test
+      - coordinator
+      - issue
+      - pr
+
+    complexity:
+      - small      # 1h-4h
+      - medium     # 4h-1d
+      - large      # 1d-3d
+      - xlarge     # 3d+
+
+    phase:
+      - planning
+      - design
+      - implementation
+      - testing
+      - deployment
+
+    impact:
+      - breaking
+      - major
+      - minor
+      - patch
+
+    category:
+      - frontend
+      - backend
+      - infra
+      - dx
+      - security
+
+    effort:
+      - 1h
+      - 4h
+      - 1d
+      - 3d
+      - 1w
+      - 2w
+
+    blocked:
+      - waiting-review
+      - waiting-deployment
+      - waiting-feedback
+
+# GitHub Integration
+github:
+  enabled: true
+  os_mode: true              # Treat GitHub as OS
+  auto_issue_create: true
+  auto_pr_create: true
+  projects_v2:
+    enabled: true
+    board_name: "Miyabi Development"
+    columns:
+      - Backlog
+      - In Progress
+      - Review
+      - Done
+
+# CI/CD
+cicd:
+  provider: "github-actions"
+  workflows:
+    - ci
+    - cd
+    - test
+    - typecheck
+    - security-scan
+    - coordinator-agent
+    - codegen-agent
+    - review-agent
+    - pr-agent
+    - deployment-agent
+
+# Quality Metrics
+quality:
+  code_coverage: 80
+  quality_score: 80
+  security_scan: true
+  performance_budget:
+    enabled: false
+
+# Development
+development:
+  typescript:
+    strict: true
+    target: "ES2022"
+    module: "ESNext"
+
+  testing:
+    framework: "vitest"
+    watch_mode: true
+
+  linting:
+    tool: "eslint"
+    auto_fix: true
+
+# Security
+security:
+  secrets_management: "env"
+  required_secrets:
+    - GITHUB_TOKEN
+    - ANTHROPIC_API_KEY
+  webhook_verification: true
+  signature_algorithm: "HMAC-SHA256"
+
+# Monitoring
+monitoring:
+  enabled: false
+  real_time: false
+  watch_interval: 5000       # ms
+
+# Notifications
+notifications:
+  enabled: false
+  channels: []
