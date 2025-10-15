@@ -44,7 +44,7 @@ export function SpecialtySelector({
         const data = await response.json()
         setSpecialties(data.data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load specialties")
+        setError(err instanceof Error ? err.message : "専門分野の読み込みに失敗しました")
       } finally {
         setIsLoading(false)
       }
@@ -139,7 +139,7 @@ export function SpecialtySelector({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search specialties..."
+            placeholder="専門分野を検索..."
             className="h-10 w-full rounded-md border border-gray-300 bg-white pl-10 pr-3 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
         </div>
@@ -149,7 +149,7 @@ export function SpecialtySelector({
       {value.length < maxSelections && search && (
         <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg border border-gray-300 bg-white p-4">
           {filteredSpecialties.length === 0 ? (
-            <p className="text-center text-sm text-gray-500">No specialties found</p>
+            <p className="text-center text-sm text-gray-500">専門分野が見つかりません</p>
           ) : (
             filteredSpecialties.map((sp) => (
               <button
@@ -170,8 +170,8 @@ export function SpecialtySelector({
 
       {/* Info text */}
       <p className="text-xs text-gray-500">
-        {value.length} / {maxSelections} selected
-        {value.length === 0 && " (at least 1 required)"}
+        {value.length} / {maxSelections} 選択済み
+        {value.length === 0 && " (最低1つ必須)"}
       </p>
     </div>
   )

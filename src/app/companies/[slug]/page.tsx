@@ -120,7 +120,7 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
                 {company.isVerified && (
                   <div className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-900">
                     <Star className="h-4 w-4 fill-blue-600 text-blue-600" />
-                    Verified
+                    認証済み
                   </div>
                 )}
               </div>
@@ -131,23 +131,23 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span className="font-medium">{company.averageRating.toFixed(1)}</span>
-                    <span>({company.reviewCount} reviews)</span>
+                    <span>({company.reviewCount}件のレビュー)</span>
                   </div>
                 )}
                 <div className="flex items-center gap-1">
                   <Briefcase className="h-4 w-4" />
-                  <span>{company.projectCount} projects</span>
+                  <span>{company.projectCount}件のプロジェクト</span>
                 </div>
                 {company.foundedYear && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
-                    <span>Founded {company.foundedYear}</span>
+                    <span>設立年 {company.foundedYear}</span>
                   </div>
                 )}
                 {company.employeeCount && (
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4" />
-                    <span>{company.employeeCount} employees</span>
+                    <span>{company.employeeCount}名</span>
                   </div>
                 )}
               </div>
@@ -161,18 +161,18 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
           <div className="space-y-8 lg:col-span-2">
             {/* About */}
             <div className="rounded-lg bg-white p-6 shadow-md">
-              <h2 className="text-xl font-semibold text-gray-900">About</h2>
+              <h2 className="text-xl font-semibold text-gray-900">会社概要</h2>
               {company.description ? (
                 <p className="mt-4 whitespace-pre-wrap text-gray-700">{company.description}</p>
               ) : (
-                <p className="mt-4 text-gray-500">No description available.</p>
+                <p className="mt-4 text-gray-500">説明はまだ登録されていません。</p>
               )}
             </div>
 
             {/* Tech Stacks */}
             {company.techStacks.length > 0 && (
               <div className="rounded-lg bg-white p-6 shadow-md">
-                <h2 className="text-xl font-semibold text-gray-900">Tech Stack</h2>
+                <h2 className="text-xl font-semibold text-gray-900">技術スタック</h2>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {company.techStacks.map((ct) => (
                     <div
@@ -189,7 +189,7 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
             {/* Specialties */}
             {company.specialties.length > 0 && (
               <div className="rounded-lg bg-white p-6 shadow-md">
-                <h2 className="text-xl font-semibold text-gray-900">Specialties</h2>
+                <h2 className="text-xl font-semibold text-gray-900">専門分野</h2>
                 <div className="mt-4 space-y-3">
                   {company.specialties.map((cs) => (
                     <div key={cs.id}>
@@ -207,7 +207,7 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
             {company.reviews.length > 0 && (
               <div className="rounded-lg bg-white p-6 shadow-md">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  Reviews ({company._count.reviews})
+                  レビュー ({company._count.reviews}件)
                 </h2>
                 <div className="mt-4 space-y-6">
                   {company.reviews.map((review) => (
@@ -227,7 +227,7 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-gray-900">
-                              {review.user.name || "Anonymous"}
+                              {review.user.name || "匿名"}
                             </p>
                             <div className="flex">
                               {Array.from({ length: review.rating }).map((_, i) => (
@@ -258,7 +258,7 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
           <div className="space-y-6">
             {/* Contact Information */}
             <div className="rounded-lg bg-white p-6 shadow-md">
-              <h3 className="text-lg font-semibold text-gray-900">Contact Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900">連絡先情報</h3>
               <div className="mt-4 space-y-3">
                 {company.address && (
                   <div className="flex items-start gap-3">
@@ -303,23 +303,23 @@ export default async function CompanyProfilePage({ params }: CompanyProfilePageP
 
             {/* Company Details */}
             <div className="rounded-lg bg-white p-6 shadow-md">
-              <h3 className="text-lg font-semibold text-gray-900">Company Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900">企業情報</h3>
               <div className="mt-4 space-y-3">
                 {company.foundedYear && (
                   <div>
-                    <p className="text-xs font-medium uppercase text-gray-500">Founded</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">設立年</p>
                     <p className="mt-1 text-sm text-gray-900">{company.foundedYear}</p>
                   </div>
                 )}
                 {company.employeeCount && (
                   <div>
-                    <p className="text-xs font-medium uppercase text-gray-500">Employees</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">従業員数</p>
                     <p className="mt-1 text-sm text-gray-900">{company.employeeCount}</p>
                   </div>
                 )}
                 {company.capital && (
                   <div>
-                    <p className="text-xs font-medium uppercase text-gray-500">Capital</p>
+                    <p className="text-xs font-medium uppercase text-gray-500">資本金</p>
                     <p className="mt-1 text-sm text-gray-900">{company.capital}</p>
                   </div>
                 )}

@@ -58,7 +58,7 @@ export function ImageUpload({
       // In production, upload to a real storage service
       onChange(base64)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed")
+      setError(err instanceof Error ? err.message : "アップロードに失敗しました")
     } finally {
       setIsUploading(false)
     }
@@ -146,7 +146,7 @@ export function ImageUpload({
             {isUploading ? (
               <div className="flex flex-col items-center gap-2">
                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-                <p className="text-sm text-gray-600">Uploading...</p>
+                <p className="text-sm text-gray-600">アップロード中...</p>
               </div>
             ) : (
               <>
@@ -155,10 +155,10 @@ export function ImageUpload({
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">
-                    Click to upload or drag and drop
+                    クリックまたはドラッグ&ドロップでアップロード
                   </p>
                   <p className="text-xs text-gray-500">
-                    PNG, JPG, WebP, or GIF (max {maxSize}MB)
+                    PNG、JPG、WebP、またはGIF (最大 {maxSize}MB)
                   </p>
                 </div>
               </>

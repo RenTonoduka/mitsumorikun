@@ -35,11 +35,11 @@ import { FileUpload } from '@/components/request/FileUpload';
 type FormData = RequestCreateInput;
 
 const STEPS = [
-  { id: 1, title: 'Project Info', description: 'Basic project details' },
-  { id: 2, title: 'Budget & Timeline', description: 'Budget and schedule' },
-  { id: 3, title: 'Requirements', description: 'Detailed requirements' },
-  { id: 4, title: 'Attachments', description: 'Upload files' },
-  { id: 5, title: 'Review', description: 'Review and submit' },
+  { id: 1, title: 'プロジェクト情報', description: '基本的なプロジェクト詳細' },
+  { id: 2, title: '予算とスケジュール', description: '予算と期間' },
+  { id: 3, title: '要件', description: '詳細な要件' },
+  { id: 4, title: '添付ファイル', description: 'ファイルをアップロード' },
+  { id: 5, title: '確認', description: '確認して送信' },
 ];
 
 export default function NewRequestPage() {
@@ -117,7 +117,7 @@ export default function NewRequestPage() {
 
       // Ask if user wants to publish immediately
       const shouldPublish = window.confirm(
-        'Request saved as draft. Do you want to publish it now?'
+        'リクエストを下書きとして保存しました。今すぐ公開しますか?'
       );
 
       if (shouldPublish) {
@@ -134,7 +134,7 @@ export default function NewRequestPage() {
       router.push(`/requests/${request.id}`);
     } catch (error) {
       console.error('Error submitting request:', error);
-      alert('Failed to submit request. Please try again.');
+      alert('リクエストの送信に失敗しました。もう一度お試しください。');
     } finally {
       setIsSubmitting(false);
     }
@@ -158,10 +158,10 @@ export default function NewRequestPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Create Quote Request
+            見積もりリクエストを作成
           </h1>
           <p className="mt-2 text-gray-600">
-            Fill out the form below to request quotes from companies
+            以下のフォームに入力して、企業から見積もりを依頼してください
           </p>
         </div>
 
@@ -225,11 +225,11 @@ export default function NewRequestPage() {
               {currentStep === 1 && (
                 <>
                   <div>
-                    <Label htmlFor="title">Project Title *</Label>
+                    <Label htmlFor="title">プロジェクト名 *</Label>
                     <Input
                       id="title"
                       {...register('title')}
-                      placeholder="e.g., E-commerce website development"
+                      placeholder="例: ECサイト開発"
                     />
                     {errors.title && (
                       <p className="mt-1 text-sm text-red-600">
@@ -239,7 +239,7 @@ export default function NewRequestPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="projectType">Project Type *</Label>
+                    <Label htmlFor="projectType">プロジェクトタイプ *</Label>
                     <Select
                       value={formData.projectType}
                       onValueChange={(value) =>
@@ -247,7 +247,7 @@ export default function NewRequestPage() {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select project type" />
+                        <SelectValue placeholder="プロジェクトタイプを選択" />
                       </SelectTrigger>
                       <SelectContent>
                         {Object.entries(projectTypeLabels).map(([key, label]) => (
@@ -270,12 +270,12 @@ export default function NewRequestPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="description">Project Description *</Label>
+                    <Label htmlFor="description">プロジェクト概要 *</Label>
                     <Textarea
                       id="description"
                       rows={6}
                       {...register('description')}
-                      placeholder="Describe your project in detail..."
+                      placeholder="プロジェクトの詳細を記述してください..."
                     />
                     {errors.description && (
                       <p className="mt-1 text-sm text-red-600">
@@ -283,7 +283,7 @@ export default function NewRequestPage() {
                       </p>
                     )}
                     <p className="mt-1 text-xs text-gray-500">
-                      {formData.description?.length || 0} / 2000 characters
+                      {formData.description?.length || 0} / 2000 文字
                     </p>
                   </div>
                 </>
@@ -294,12 +294,12 @@ export default function NewRequestPage() {
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="budgetMin">Minimum Budget (¥)</Label>
+                      <Label htmlFor="budgetMin">最低予算 (¥)</Label>
                       <Input
                         id="budgetMin"
                         type="number"
                         {...register('budgetMin', { valueAsNumber: true })}
-                        placeholder="e.g., 1000000"
+                        placeholder="例: 1000000"
                       />
                       {errors.budgetMin && (
                         <p className="mt-1 text-sm text-red-600">
@@ -308,12 +308,12 @@ export default function NewRequestPage() {
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="budgetMax">Maximum Budget (¥)</Label>
+                      <Label htmlFor="budgetMax">最高予算 (¥)</Label>
                       <Input
                         id="budgetMax"
                         type="number"
                         {...register('budgetMax', { valueAsNumber: true })}
-                        placeholder="e.g., 3000000"
+                        placeholder="例: 3000000"
                       />
                       {errors.budgetMax && (
                         <p className="mt-1 text-sm text-red-600">
@@ -325,7 +325,7 @@ export default function NewRequestPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="preferredStart">Preferred Start Date</Label>
+                      <Label htmlFor="preferredStart">希望開始日</Label>
                       <Input
                         id="preferredStart"
                         type="date"
@@ -338,7 +338,7 @@ export default function NewRequestPage() {
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="deadline">Deadline</Label>
+                      <Label htmlFor="deadline">納期</Label>
                       <Input id="deadline" type="date" {...register('deadline')} />
                       {errors.deadline && (
                         <p className="mt-1 text-sm text-red-600">
@@ -354,11 +354,11 @@ export default function NewRequestPage() {
               {currentStep === 3 && (
                 <>
                   <div>
-                    <Label htmlFor="features">Key Features</Label>
+                    <Label htmlFor="features">主要機能</Label>
                     <Textarea
                       id="features"
                       rows={4}
-                      placeholder="List the main features you need..."
+                      placeholder="必要な主要機能をリストアップしてください..."
                       onChange={(e) => {
                         const features = e.target.value
                           .split('\n')
@@ -373,11 +373,11 @@ export default function NewRequestPage() {
 
                   <div>
                     <Label htmlFor="technologies">
-                      Preferred Technologies (Optional)
+                      希望技術スタック (任意)
                     </Label>
                     <Input
                       id="technologies"
-                      placeholder="e.g., React, Node.js, PostgreSQL"
+                      placeholder="例: React, Node.js, PostgreSQL"
                       onChange={(e) => {
                         const technologies = e.target.value
                           .split(',')
@@ -392,10 +392,10 @@ export default function NewRequestPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="targetAudience">Target Audience</Label>
+                    <Label htmlFor="targetAudience">ターゲット</Label>
                     <Input
                       id="targetAudience"
-                      placeholder="Who will use this system?"
+                      placeholder="誰がこのシステムを使用しますか?"
                       onChange={(e) => {
                         setValue('requirements', {
                           ...formData.requirements,
@@ -406,11 +406,11 @@ export default function NewRequestPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="additionalNotes">Additional Notes</Label>
+                    <Label htmlFor="additionalNotes">備考</Label>
                     <Textarea
                       id="additionalNotes"
                       rows={4}
-                      placeholder="Any other requirements or notes..."
+                      placeholder="その他の要件やメモ..."
                       onChange={(e) => {
                         setValue('requirements', {
                           ...formData.requirements,
@@ -426,9 +426,9 @@ export default function NewRequestPage() {
               {currentStep === 4 && (
                 <>
                   <div>
-                    <Label>File Attachments (Optional)</Label>
+                    <Label>ファイル添付 (任意)</Label>
                     <p className="mb-4 text-sm text-gray-600">
-                      Upload any relevant documents, designs, or specifications
+                      関連するドキュメント、デザイン、仕様書をアップロードしてください
                     </p>
                     <FileUpload
                       value={formData.attachments}
@@ -442,21 +442,21 @@ export default function NewRequestPage() {
               {currentStep === 5 && (
                 <div className="space-y-4">
                   <div className="rounded-lg bg-gray-50 p-4">
-                    <h3 className="font-medium text-gray-900">Project Info</h3>
+                    <h3 className="font-medium text-gray-900">プロジェクト情報</h3>
                     <dl className="mt-2 space-y-2 text-sm">
                       <div>
-                        <dt className="text-gray-600">Title:</dt>
+                        <dt className="text-gray-600">プロジェクト名:</dt>
                         <dd className="font-medium">{formData.title}</dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">Type:</dt>
+                        <dt className="text-gray-600">タイプ:</dt>
                         <dd className="font-medium">
                           {formData.projectType &&
                             projectTypeLabels[formData.projectType]}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">Description:</dt>
+                        <dt className="text-gray-600">概要:</dt>
                         <dd>{formData.description}</dd>
                       </div>
                     </dl>
@@ -464,23 +464,23 @@ export default function NewRequestPage() {
 
                   <div className="rounded-lg bg-gray-50 p-4">
                     <h3 className="font-medium text-gray-900">
-                      Budget & Timeline
+                      予算とスケジュール
                     </h3>
                     <dl className="mt-2 space-y-2 text-sm">
                       <div>
-                        <dt className="text-gray-600">Budget:</dt>
+                        <dt className="text-gray-600">予算:</dt>
                         <dd className="font-medium">
                           {formData.budgetMin && formData.budgetMax
                             ? `¥${formData.budgetMin.toLocaleString()} - ¥${formData.budgetMax.toLocaleString()}`
-                            : 'Not specified'}
+                            : '未指定'}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">Timeline:</dt>
+                        <dt className="text-gray-600">期間:</dt>
                         <dd className="font-medium">
                           {formData.preferredStart && formData.deadline
-                            ? `${formData.preferredStart} to ${formData.deadline}`
-                            : 'Not specified'}
+                            ? `${formData.preferredStart} から ${formData.deadline}`
+                            : '未指定'}
                         </dd>
                       </div>
                     </dl>
@@ -488,9 +488,9 @@ export default function NewRequestPage() {
 
                   {formData.attachments && formData.attachments.length > 0 && (
                     <div className="rounded-lg bg-gray-50 p-4">
-                      <h3 className="font-medium text-gray-900">Attachments</h3>
+                      <h3 className="font-medium text-gray-900">添付ファイル</h3>
                       <p className="mt-2 text-sm">
-                        {formData.attachments.length} file(s) attached
+                        {formData.attachments.length}個のファイル添付済み
                       </p>
                     </div>
                   )}
@@ -505,7 +505,7 @@ export default function NewRequestPage() {
                   onClick={prevStep}
                   disabled={currentStep === 1}
                 >
-                  Previous
+                  戻る
                 </Button>
 
                 <div className="flex gap-2">
@@ -515,16 +515,16 @@ export default function NewRequestPage() {
                     onClick={saveDraft}
                     disabled={isSubmitting}
                   >
-                    Save Draft
+                    下書き保存
                   </Button>
 
                   {currentStep < STEPS.length ? (
                     <Button type="button" onClick={nextStep}>
-                      Next
+                      次へ
                     </Button>
                   ) : (
                     <Button type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? 'Submitting...' : 'Submit Request'}
+                      {isSubmitting ? '送信中...' : 'リクエストを送信'}
                     </Button>
                   )}
                 </div>

@@ -23,10 +23,10 @@ import { SpecialtySelector } from "@/components/company/SpecialtySelector"
 import { cn } from "@/lib/utils/cn"
 
 const STEPS = [
-  { id: 1, name: "Basic Information", description: "Company details" },
-  { id: 2, name: "Contact Information", description: "How to reach you" },
-  { id: 3, name: "Images", description: "Logo and cover" },
-  { id: 4, name: "Tech & Specialties", description: "Your expertise" },
+  { id: 1, name: "基本情報", description: "会社の詳細" },
+  { id: 2, name: "連絡先情報", description: "お問い合わせ先" },
+  { id: 3, name: "画像", description: "ロゴとカバー画像" },
+  { id: 4, name: "技術と専門分野", description: "得意分野" },
 ]
 
 export default function NewCompanyPage() {
@@ -130,9 +130,9 @@ export default function NewCompanyPage() {
       <div className="container mx-auto max-w-4xl px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Register Your Company</h1>
+          <h1 className="text-3xl font-bold text-gray-900">企業登録</h1>
           <p className="mt-2 text-gray-600">
-            Create your company profile to start receiving project requests
+            企業プロフィールを作成してプロジェクト依頼を受け取りましょう
           </p>
         </div>
 
@@ -178,16 +178,16 @@ export default function NewCompanyPage() {
             {/* Step 1: Basic Information */}
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-900">Basic Information</h2>
+                <h2 className="text-xl font-semibold text-gray-900">基本情報</h2>
 
                 <div>
                   <Label htmlFor="name">
-                    Company Name <span className="text-red-600">*</span>
+                    会社名 <span className="text-red-600">*</span>
                   </Label>
                   <Input
                     id="name"
                     {...form.register("name")}
-                    placeholder="Acme Inc."
+                    placeholder="株式会社アクメ"
                     className="mt-1"
                   />
                   {form.formState.errors.name && (
@@ -198,11 +198,11 @@ export default function NewCompanyPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="nameKana">Company Name (Kana)</Label>
+                  <Label htmlFor="nameKana">会社名（カナ）</Label>
                   <Input
                     id="nameKana"
                     {...form.register("nameKana")}
-                    placeholder="アクメ"
+                    placeholder="カブシキガイシャアクメ"
                     className="mt-1"
                   />
                   {form.formState.errors.nameKana && (
@@ -213,11 +213,11 @@ export default function NewCompanyPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">会社概要</Label>
                   <Textarea
                     id="description"
                     {...form.register("description")}
-                    placeholder="Tell us about your company..."
+                    placeholder="会社について説明してください..."
                     className="mt-1"
                     rows={4}
                   />
@@ -230,7 +230,7 @@ export default function NewCompanyPage() {
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
                   <div>
-                    <Label htmlFor="foundedYear">Founded Year</Label>
+                    <Label htmlFor="foundedYear">設立年</Label>
                     <Input
                       id="foundedYear"
                       type="number"
@@ -246,11 +246,11 @@ export default function NewCompanyPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="employeeCount">Employee Count</Label>
+                    <Label htmlFor="employeeCount">従業員数</Label>
                     <Input
                       id="employeeCount"
                       {...form.register("employeeCount")}
-                      placeholder="10-50"
+                      placeholder="10-50名"
                       className="mt-1"
                     />
                     {form.formState.errors.employeeCount && (
@@ -261,11 +261,11 @@ export default function NewCompanyPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="capital">Capital</Label>
+                    <Label htmlFor="capital">資本金</Label>
                     <Input
                       id="capital"
                       {...form.register("capital")}
-                      placeholder="10M JPY"
+                      placeholder="1000万円"
                       className="mt-1"
                     />
                     {form.formState.errors.capital && (
@@ -281,14 +281,14 @@ export default function NewCompanyPage() {
             {/* Step 2: Contact Information */}
             {currentStep === 2 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-900">Contact Information</h2>
+                <h2 className="text-xl font-semibold text-gray-900">連絡先情報</h2>
 
                 <div>
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address">住所</Label>
                   <Input
                     id="address"
                     {...form.register("address")}
-                    placeholder="123 Main St, Tokyo, Japan"
+                    placeholder="東京都渋谷区〇〇1-2-3"
                     className="mt-1"
                   />
                   {form.formState.errors.address && (
@@ -300,11 +300,11 @@ export default function NewCompanyPage() {
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone">電話番号</Label>
                     <Input
                       id="phone"
                       {...form.register("phone")}
-                      placeholder="+81-3-1234-5678"
+                      placeholder="03-1234-5678"
                       className="mt-1"
                     />
                     {form.formState.errors.phone && (
@@ -315,7 +315,7 @@ export default function NewCompanyPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">メールアドレス</Label>
                     <Input
                       id="email"
                       type="email"
@@ -332,7 +332,7 @@ export default function NewCompanyPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="website">Website</Label>
+                  <Label htmlFor="website">ウェブサイト</Label>
                   <Input
                     id="website"
                     type="url"
@@ -352,11 +352,11 @@ export default function NewCompanyPage() {
             {/* Step 3: Images */}
             {currentStep === 3 && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-900">Images</h2>
+                <h2 className="text-xl font-semibold text-gray-900">画像</h2>
 
                 <ImageUpload
-                  label="Company Logo"
-                  description="Square logo, recommended 400x400px"
+                  label="会社ロゴ"
+                  description="正方形のロゴ、推奨サイズ 400x400px"
                   value={form.watch("logo") || undefined}
                   onChange={(url) => form.setValue("logo", url)}
                   onRemove={() => form.setValue("logo", "")}
@@ -364,8 +364,8 @@ export default function NewCompanyPage() {
                 />
 
                 <ImageUpload
-                  label="Cover Image"
-                  description="Wide banner image, recommended 1200x400px"
+                  label="カバー画像"
+                  description="横長のバナー画像、推奨サイズ 1200x400px"
                   value={form.watch("coverImage") || undefined}
                   onChange={(url) => form.setValue("coverImage", url)}
                   onRemove={() => form.setValue("coverImage", "")}
@@ -378,12 +378,12 @@ export default function NewCompanyPage() {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  Tech Stacks & Specialties
+                  技術スタックと専門分野
                 </h2>
 
                 <TechStackSelector
-                  label="Tech Stacks"
-                  description="Select the technologies your company specializes in"
+                  label="技術スタック"
+                  description="貴社が得意とする技術を選択してください"
                   value={form.watch("techStackIds")}
                   onChange={(value) => form.setValue("techStackIds", value)}
                 />
@@ -394,8 +394,8 @@ export default function NewCompanyPage() {
                 )}
 
                 <SpecialtySelector
-                  label="Specialties"
-                  description="Select your company's areas of expertise"
+                  label="専門分野"
+                  description="貴社の専門領域を選択してください"
                   value={form.watch("specialtyIds")}
                   onChange={(value) => form.setValue("specialtyIds", value)}
                 />
@@ -423,12 +423,12 @@ export default function NewCompanyPage() {
                 disabled={currentStep === 1 || isSubmitting}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
+                戻る
               </Button>
 
               {currentStep < STEPS.length ? (
                 <Button type="button" onClick={handleNext} disabled={isSubmitting}>
-                  Next
+                  次へ
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
@@ -436,12 +436,12 @@ export default function NewCompanyPage() {
                   {isSubmitting ? (
                     <>
                       <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      Creating...
+                      登録中...
                     </>
                   ) : (
                     <>
                       <Check className="mr-2 h-4 w-4" />
-                      Create Company
+                      企業を登録
                     </>
                   )}
                 </Button>
