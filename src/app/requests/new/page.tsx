@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProjectType } from '@prisma/client';
@@ -31,6 +32,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileUpload } from '@/components/request/FileUpload';
+import { AlertCircle } from 'lucide-react';
 
 type FormData = RequestCreateInput;
 
@@ -44,9 +46,11 @@ const STEPS = [
 
 export default function NewRequestPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [draftId, setDraftId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -96,7 +100,14 @@ export default function NewRequestPage() {
   };
 
   const onSubmit = async (data: FormData) => {
+    // Check authentication
+    if (!session) {
+      setError('リクエストを送信するにはログインが必要です。');
+      return;
+    }
+
     setIsSubmitting(true);
+    setError(null);
 
     try {
       // Create or update request
@@ -109,8 +120,15 @@ export default function NewRequestPage() {
         body: JSON.stringify(data),
       });
 
+      if (response.status === 401) {
+        setError('認証の有効期限が切れました。再度ログインしてください。');
+        setTimeout(() => signIn('google'), 2000);
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to save request');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save request');
       }
 
       const request = await response.json();
@@ -134,7 +152,11 @@ export default function NewRequestPage() {
       router.push(`/requests/${request.id}`);
     } catch (error) {
       console.error('Error submitting request:', error);
-      alert('リクエストの送信に失敗しました。もう一度お試しください。');
+      setError(
+        error instanceof Error
+          ? error.message
+          : 'リクエストの送信に失敗しました。もう一度お試しください。'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -152,6 +174,55 @@ export default function NewRequestPage() {
     }
   };
 
+  // Show loading state while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-purple-600"></div>
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt for unauthenticated users
+  if (!session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-center">
+              <AlertCircle className="h-6 w-6 text-yellow-600" />
+              ログインが必要です
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-center text-gray-600">
+              見積もりリクエストを作成するには、ログインが必要です。
+            </p>
+            <div className="space-y-2">
+              <Button
+                onClick={() => signIn('google')}
+                className="w-full"
+                size="lg"
+              >
+                Googleでログイン
+              </Button>
+              <Button
+                onClick={() => router.push('/')}
+                variant="outline"
+                className="w-full"
+              >
+                ホームに戻る
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -164,6 +235,16 @@ export default function NewRequestPage() {
             以下のフォームに入力して、企業から見積もりを依頼してください
           </p>
         </div>
+
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-red-600" />
+              <p className="text-sm font-medium text-red-800">{error}</p>
+            </div>
+          </div>
+        )}
 
         {/* Progress Steps */}
         <div className="mb-8">
