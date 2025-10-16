@@ -9,11 +9,27 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "@prisma/client";
 
-// Initialize Prisma Client directly for NextAuth
-const prismaForAuth = new PrismaClient();
+// Global Prisma instance for NextAuth to avoid multiple connections
+const globalForPrisma = globalThis as unknown as {
+  prismaForAuth: PrismaClient | undefined;
+};
+
+const prismaForAuth =
+  globalForPrisma.prismaForAuth ??
+  new PrismaClient({
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prismaForAuth = prismaForAuth;
+}
+
+console.log("[Auth] PrismaClient initialized for NextAuth:", !!prismaForAuth);
+console.log("[Auth] DATABASE_URL exists:", !!process.env.DATABASE_URL);
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prismaForAuth) as any,
+  // Using JWT strategy instead of database adapter to avoid App Router compatibility issues
+  // adapter: PrismaAdapter(prismaForAuth) as any,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -21,14 +37,53 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    async signIn({ user, account, profile }) {
+      // Create or update user in database on sign in
+      if (account && profile) {
+        try {
+          const existingUser = await prismaForAuth.user.findUnique({
+            where: { email: user.email! },
+          });
+
+          if (!existingUser) {
+            await prismaForAuth.user.create({
+              data: {
+                email: user.email!,
+                name: user.name,
+                image: user.image,
+                emailVerified: new Date(),
+                role: "USER",
+              },
+            });
+          }
+        } catch (error) {
+          console.error("[Auth] SignIn callback error:", error);
+          return false;
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      // Initial sign in
+      if (account && user) {
         const dbUser = await prismaForAuth.user.findUnique({
-          where: { id: user.id },
-          select: { role: true },
+          where: { email: user.email! },
+          select: { id: true, role: true },
         });
-        session.user.role = dbUser?.role || "USER";
+
+        return {
+          ...token,
+          id: dbUser?.id,
+          role: dbUser?.role || "USER",
+        };
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.role = (token.role as string) || "USER";
       }
       return session;
     },
@@ -38,7 +93,7 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
   },
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
 };
 
