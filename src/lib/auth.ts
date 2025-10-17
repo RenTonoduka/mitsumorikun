@@ -7,7 +7,7 @@ import { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserRole } from "@prisma/client";
 
 // Global Prisma instance for NextAuth to avoid multiple connections
 const globalForPrisma = globalThis as unknown as {
@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
                 name: user.name,
                 image: user.image,
                 emailVerified: new Date(),
-                role: "USER",
+                role: UserRole.USER,
               },
             });
           }
@@ -74,7 +74,7 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           id: dbUser?.id,
-          role: dbUser?.role || "USER",
+          role: dbUser?.role || UserRole.USER,
         };
       }
 
@@ -83,7 +83,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
-        session.user.role = (token.role as string) || "USER";
+        session.user.role = (token.role as UserRole) || UserRole.USER;
       }
       return session;
     },
@@ -110,9 +110,7 @@ export async function requireAuth() {
   return user;
 }
 
-export async function requireRole(
-  role: "USER" | "COMPANY_ADMIN" | "SYSTEM_ADMIN"
-) {
+export async function requireRole(role: UserRole) {
   const user = await getCurrentUser();
   if (!user || user.role !== role) {
     throw new Error("Forbidden");
