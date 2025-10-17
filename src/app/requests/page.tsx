@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ProjectType, RequestStatus } from '@prisma/client';
@@ -57,7 +57,7 @@ interface PaginationData {
   totalPages: number;
 }
 
-export default function RequestsPage() {
+function RequestsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [requests, setRequests] = useState<Request[]>([]);
@@ -344,5 +344,19 @@ export default function RequestsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function RequestsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center">
+          <div className="text-gray-500">Loading...</div>
+        </div>
+      }
+    >
+      <RequestsContent />
+    </Suspense>
   );
 }
