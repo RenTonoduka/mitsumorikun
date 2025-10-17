@@ -11,3 +11,9 @@ export const prisma =
   })
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+
+// Debug: Verify Prisma client initialization
+if (process.env.NODE_ENV === "development") {
+  console.log("[Prisma] Client initialized:", !!prisma)
+  console.log("[Prisma] DATABASE_URL set:", !!process.env.DATABASE_URL)
+}

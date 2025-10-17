@@ -10,13 +10,10 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mitsumorikun
       - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
     depends_on:
       - db
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    command: npm run dev
 
   db:
     image: postgres:16-alpine
